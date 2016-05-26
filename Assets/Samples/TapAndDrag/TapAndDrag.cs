@@ -6,7 +6,8 @@ using UniRx;
 using UniRx.Triggers;
 
 /// <summary>
-/// 
+/// This demonstrates tap and dragging action via rx streams. 
+/// In some cases, tap and drag action can be distinguished.
 /// </summary>
 public class TapAndDrag : MonoBehaviour 
 {
@@ -18,9 +19,9 @@ public class TapAndDrag : MonoBehaviour
     {
         // picking stream
         var mouseDown = this.UpdateAsObservable()
-                            .Where(_ => Input.GetMouseButtonDown(0))
-                            .Select(_ => Camera.main.ScreenPointToRay(Input.mousePosition)) // selected Ray
-                            .Select(ray =>
+                            .Where(_ => Input.GetMouseButtonDown(0))                        // start to picking
+                            .Select(_ => Camera.main.ScreenPointToRay(Input.mousePosition)) // select Ray
+                            .Select(ray =>                                                  // check whether something is hit or not
                                 {
                                     RaycastHit result;
                                     var isHit = Physics.Raycast(ray, out result);
@@ -38,14 +39,13 @@ public class TapAndDrag : MonoBehaviour
             .SkipUntil(mouseDown)
             .TakeUntil(mouseUp)
             .Select(_ => new Vector2(Input.mousePosition.x, Input.mousePosition.y))
-            .Buffer(mouseDown.Throttle(TimeSpan.FromMilliseconds(100)))
+            .Buffer(mouseDown.Throttle(TimeSpan.FromMilliseconds(100))) // exactly saying, it's same as just waiting.
             .RepeatUntilDestroy(this)
             .Subscribe(x =>
             {
                 List<Vector2> list = x as List<Vector2>;
                 if (list != null && list.Count > 2)
                 {
-                    
                     Vector2 first = list[0];
                     Vector2 last = list[list.Count - 1];
                     if (Mathf.Abs(first.x - last.x) < delta && Mathf.Abs(first.y - last.y) < delta)
@@ -58,7 +58,7 @@ public class TapAndDrag : MonoBehaviour
             //    {
             //        if (list != null && list.Count > 2)
             //        {
-            //            Vector2 first = list.First();
+            //            Vector2 first = list.First(); 
             //            Vector2 last = list.Last();
             //            if (Mathf.Abs(first.x - last.x) < delta && Mathf.Abs(first.y - last.y) < delta)
             //            {
