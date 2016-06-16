@@ -1,17 +1,19 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using UniRx;
 
-public class SamplePublish : MonoBehaviour 
+public class SamplePublish : MonoBehaviour
 {
 
-	void Start () 
+    void Start()
     {
-        TestA();
+        //TestA();
 
         TestB();
-	}
+
+        TestC();
+    }
 
     /// <summary>
     /// result:
@@ -42,21 +44,51 @@ public class SamplePublish : MonoBehaviour
 
     void TestB()
     {
-        string[] names = {"cube", "cylinder", "sphere"};
+        string[] names = { "Cube", "Cylinder", "Sphere" };
 
         var sequence = Observable.Range(1, 3).Publish();
 
-        var streamA = sequence.Do(val => { ResourceStreamA(names[val-1]); });
-        var streamB = sequence.Do(val => { ResourceStreamB(names[val-1]); });
+        //var streamA = sequence.Do(val => { ResourceStreamA(names[val-1]); });
+        var streamA = sequence.Select(e => names[e - 1] + "A")
+            .Do(s => Debug.Log(s))
+            .SelectMany(x => Resources.LoadAsync<GameObject>(x).AsAsyncOperationObservable())
 
+            .Subscribe(val =>
+           {
+               GameObject o = val.asset as GameObject;
+               GameObject inst = GameObject.Instantiate(o);
+               Debug.LogFormat("{0}", inst.name);
+           }, () => { });
+        //var streamB = sequence.Do(val => { ResourceStreamB(names[val-1]); });
+        var streamB = sequence.Select(e => names[e - 1] + "B")
+            .Do(s => Debug.Log(s))
+            .SelectMany(x => Resources.LoadAsync<GameObject>(x).AsAsyncOperationObservable())
+
+            .Subscribe(val =>
+            {
+                GameObject o = val.asset as GameObject;
+                GameObject inst = GameObject.Instantiate(o);
+                Debug.LogFormat("{0}", inst.name);
+            }, () => { });
+
+        /*
         Observable.WhenAll(streamA, streamB).Subscribe(
             x => {
-                Debug.LogFormat("A: {0}", x[0]);
-                Debug.LogFormat("B: {0}", x[1]);
+                Debug.Log("OnNext");
+                GameObject a = x[0].asset as GameObject;
+                if (a != null)
+                    Debug.LogFormat("A: {0}", a.name);
+
+                GameObject b = x[1].asset as GameObject;
+                if (b != null)
+                    Debug.LogFormat("B: {0}", b.name);
+
+
 
                 // how can I access to the actually loaded gameobject?
                 // ...
             });
+        */
 
         sequence.Connect();
     }
@@ -75,4 +107,47 @@ public class SamplePublish : MonoBehaviour
         return Resources.LoadAsync<GameObject>(name).AsAsyncOperationObservable().Last();
     }
 
+    void TestC()
+    {
+        string[] names = { "Cube", "Cylinder", "Sphere" };
+
+        var sequence = Observable.Range(1, 3).Publish();
+
+        var streamA = sequence.Select(e => names[e - 1] + "A")
+            .Do(s => Debug.Log(s))
+            .SelectMany(x => Resources.LoadAsync<GameObject>(x).AsAsyncOperationObservable());
+            
+
+        var streamB = sequence.Select(e => names[e - 1] + "B")
+            .Do(s => Debug.Log(s))
+            .SelectMany(x => Resources.LoadAsync<GameObject>(x).AsAsyncOperationObservable());
+
+
+        List< IObservable <ResourceRequest>> list = new List<IObservable<ResourceRequest>>();
+        list.Add(streamA);
+        list.Add(streamB);
+        //Observable.WhenAll(streamA, streamB).Subscribe(
+        Observable.Concat(list).ToArray().Subscribe(
+            x =>
+            {
+                foreach(ResourceRequest rq in x)
+                {
+                    GameObject r = rq.asset as GameObject;
+                    GameObject o = GameObject.Instantiate(r);
+                }
+                //GameObject r = x[0].asset as GameObject;
+                //GameObject o = GameObject.Instantiate(r);
+                //Debug.LogFormat("concat {0}", x);
+                
+                /*
+                GameObject a = x[0].asset as GameObject;
+                GameObject o = Instantiate(a) as GameObject;
+                GameObject b = x[1].asset as GameObject;
+                GameObject q = Instantiate(b) as GameObject;
+                */
+            }, ()=> { });
+
+        sequence.Connect();
+    }
 }
+
