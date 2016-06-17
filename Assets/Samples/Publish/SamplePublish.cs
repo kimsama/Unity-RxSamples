@@ -10,9 +10,9 @@ public class SamplePublish : MonoBehaviour
     {
         //TestA();
 
-        TestB();
-
-        TestC();
+        //TestB();
+        TestB1();
+        //TestC();
     }
 
     /// <summary>
@@ -105,6 +105,89 @@ public class SamplePublish : MonoBehaviour
         name += "B";
         Debug.LogFormat("load: {0}", name);
         return Resources.LoadAsync<GameObject>(name).AsAsyncOperationObservable().Last();
+    }
+
+    void TestB1()
+    {
+        string[] names = { "Cube", "Cylinder", "Sphere" };
+        var sequence = Observable.Range(0, 3).Publish(); // from 0
+        var streamA = sequence.SelectMany(x => ResourceStreamA(names[x]));
+        var streamB = sequence.SelectMany(x => ResourceStreamB(names[x]));
+
+        /*
+        Observable.WhenAll(streamA, streamB).Subscribe(
+            x =>
+            {
+                Debug.Log("OnNext");
+                GameObject a = x[0].asset as GameObject;
+                if (a != null)
+                    Debug.LogFormat("A: {0}", a.name);
+
+                GameObject b = x[1].asset as GameObject;
+                if (b != null)
+                    Debug.LogFormat("B: {0}", b.name);
+
+            });
+         */
+        /*
+        Observable.WhenAll(streamA, streamB).Subscribe(
+            x =>
+            {
+                Debug.LogFormat("length: {0}", x.Length);
+                //GameObject a = x[0].asset as GameObject;
+                //if (a != null)
+                //    Debug.LogFormat("A: {0}", a.name);
+
+                //GameObject b = x[1].asset as GameObject;
+                //if (b != null)
+                //    Debug.LogFormat("B: {0}", b.name);
+            }
+        );
+         */ 
+        // Observable.WhenAll(...) == Observable.Zip(...).Take(1)
+
+        /*
+        Observable.Merge(streamA, streamB).Subscribe(
+            x => 
+            {
+                GameObject a = x.asset as GameObject;
+                Debug.LogFormat("name: {0}", a.name);
+                GameObject o = GameObject.Instantiate(a);
+                
+            });
+         */
+ 
+        Observable.CombineLatest(streamA, streamB).Subscribe(
+            x => 
+            {
+                foreach(ResourceRequest r in x)
+                {
+                    GameObject o = r.asset as GameObject;
+                    Debug.LogFormat("{0}", o.name);
+                }
+            });
+        /*
+        Observable.Zip(streamA, streamB).Take(3).Subscribe(
+            x => 
+            {
+                foreach(ResourceRequest r in x)
+                {
+                    GameObject a = r.asset as GameObject;
+                    Debug.LogFormat("name: {0}", a.name);
+                    GameObject o = GameObject.Instantiate(a);
+                }
+                
+                //GameObject a = x[0].asset as GameObject;
+                //if (a != null)
+                //    Debug.LogFormat("A: {0}", a.name);
+
+                //GameObject b = x[1].asset as GameObject;
+                //if (b != null)
+                //    Debug.LogFormat("B: {0}", b.name);
+                 
+            });
+         */
+        sequence.Connect();
     }
 
     void TestC()
