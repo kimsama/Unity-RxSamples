@@ -5,18 +5,22 @@ using UniRx;
 
 public class SamplePublish : MonoBehaviour
 {
+    string[] names = { "Cube", "Cylinder", "Sphere" };
 
     void Start()
     {
-        //TestA();
+        //Test_Default();
 
-        //TestB();
-        TestB1();
-        //TestC();
+        //Test_OnlyPublisih();
+        Test_WhenAll();
+        Test_Zip();
+        Test_Merge();
+        Test_CombineLatest();
+        Test_Concat();
     }
 
     /// <summary>
-    /// result:
+    /// Result:
     ///     A : OnNext (1)
     ///     B : OnNext (1)
     ///     A : OnNext (2)
@@ -26,7 +30,7 @@ public class SamplePublish : MonoBehaviour
     ///     A : OnCompleted
     ///     B : OnCompleted
     /// </summary>
-    void TestA()
+    void Test_Default()
     {
         var sequence = Observable.Range(1, 3).Publish();
 
@@ -42,53 +46,32 @@ public class SamplePublish : MonoBehaviour
         sequence.Connect().AddTo(this);
     }
 
-    void TestB()
+    /// <summary>
+    /// 
+    /// </summary>
+    void Test_OnlyPublisih()
     {
-        string[] names = { "Cube", "Cylinder", "Sphere" };
-
         var sequence = Observable.Range(1, 3).Publish();
 
-        //var streamA = sequence.Do(val => { ResourceStreamA(names[val-1]); });
         var streamA = sequence.Select(e => names[e - 1] + "A")
             .Do(s => Debug.Log(s))
             .SelectMany(x => Resources.LoadAsync<GameObject>(x).AsAsyncOperationObservable())
-
             .Subscribe(val =>
            {
                GameObject o = val.asset as GameObject;
                GameObject inst = GameObject.Instantiate(o);
                Debug.LogFormat("{0}", inst.name);
-           }, () => { });
-        //var streamB = sequence.Do(val => { ResourceStreamB(names[val-1]); });
+           }, () => { /*OnCompleted*/ });
+
         var streamB = sequence.Select(e => names[e - 1] + "B")
             .Do(s => Debug.Log(s))
             .SelectMany(x => Resources.LoadAsync<GameObject>(x).AsAsyncOperationObservable())
-
             .Subscribe(val =>
             {
                 GameObject o = val.asset as GameObject;
                 GameObject inst = GameObject.Instantiate(o);
                 Debug.LogFormat("{0}", inst.name);
-            }, () => { });
-
-        /*
-        Observable.WhenAll(streamA, streamB).Subscribe(
-            x => {
-                Debug.Log("OnNext");
-                GameObject a = x[0].asset as GameObject;
-                if (a != null)
-                    Debug.LogFormat("A: {0}", a.name);
-
-                GameObject b = x[1].asset as GameObject;
-                if (b != null)
-                    Debug.LogFormat("B: {0}", b.name);
-
-
-
-                // how can I access to the actually loaded gameobject?
-                // ...
-            });
-        */
+            }, () => { /*OnCompleted*/ });
 
         sequence.Connect();
     }
@@ -107,18 +90,22 @@ public class SamplePublish : MonoBehaviour
         return Resources.LoadAsync<GameObject>(name).AsAsyncOperationObservable().Last();
     }
 
-    void TestB1()
+    /// <summary>
+    /// Result:
+    ///     A: SphereA
+    ///     B: SphereB
+    /// </summary>
+    void Test_WhenAll()
     {
-        string[] names = { "Cube", "Cylinder", "Sphere" };
         var sequence = Observable.Range(0, 3).Publish(); // from 0
         var streamA = sequence.SelectMany(x => ResourceStreamA(names[x]));
         var streamB = sequence.SelectMany(x => ResourceStreamB(names[x]));
 
-        /*
         Observable.WhenAll(streamA, streamB).Subscribe(
             x =>
             {
-                Debug.Log("OnNext");
+                Debug.Log("+++ WhenAll +++");
+                Debug.LogFormat("length: {0}", x.Length);
                 GameObject a = x[0].asset as GameObject;
                 if (a != null)
                     Debug.LogFormat("A: {0}", a.name);
@@ -128,107 +115,135 @@ public class SamplePublish : MonoBehaviour
                     Debug.LogFormat("B: {0}", b.name);
 
             });
-         */
-        /*
-        Observable.WhenAll(streamA, streamB).Subscribe(
-            x =>
-            {
-                Debug.LogFormat("length: {0}", x.Length);
-                //GameObject a = x[0].asset as GameObject;
-                //if (a != null)
-                //    Debug.LogFormat("A: {0}", a.name);
 
-                //GameObject b = x[1].asset as GameObject;
-                //if (b != null)
-                //    Debug.LogFormat("B: {0}", b.name);
-            }
-        );
-         */ 
-        // Observable.WhenAll(...) == Observable.Zip(...).Take(1)
+        sequence.Connect();
+    }
 
-        /*
-        Observable.Merge(streamA, streamB).Subscribe(
-            x => 
-            {
-                GameObject a = x.asset as GameObject;
-                Debug.LogFormat("name: {0}", a.name);
-                GameObject o = GameObject.Instantiate(a);
-                
-            });
-         */
- 
-        Observable.CombineLatest(streamA, streamB).Subscribe(
-            x => 
-            {
-                foreach(ResourceRequest r in x)
-                {
-                    GameObject o = r.asset as GameObject;
-                    Debug.LogFormat("{0}", o.name);
-                }
-            });
-        /*
+    /// <summary>
+    /// Result:
+    ///     CubeA
+    ///     CubeB
+    ///     CylinderA
+    ///     CylinderB
+    ///     SphereA
+    ///     SphereB
+    /// </summary>
+    void Test_Zip()
+    {
+        var sequence = Observable.Range(0, 3).Publish(); // from 0
+        var streamA = sequence.SelectMany(x => ResourceStreamA(names[x]));
+        var streamB = sequence.SelectMany(x => ResourceStreamB(names[x]));
+
+        // Note that Zip().Take(3) same as Merge()
         Observable.Zip(streamA, streamB).Take(3).Subscribe(
             x => 
             {
+                Debug.Log("+++ Zip +++");
                 foreach(ResourceRequest r in x)
                 {
                     GameObject a = r.asset as GameObject;
                     Debug.LogFormat("name: {0}", a.name);
                     GameObject o = GameObject.Instantiate(a);
                 }
-                
-                //GameObject a = x[0].asset as GameObject;
-                //if (a != null)
-                //    Debug.LogFormat("A: {0}", a.name);
-
-                //GameObject b = x[1].asset as GameObject;
-                //if (b != null)
-                //    Debug.LogFormat("B: {0}", b.name);
-                 
             });
-         */
+
         sequence.Connect();
     }
 
-    void TestC()
+    /// <summary>
+    /// Result:
+    ///     CubeA
+    ///     CubeB
+    ///     CylinderA
+    ///     CylinderB
+    ///     SphereA
+    ///     SphereB
+    /// </summary>
+    void Test_Merge()
     {
-        string[] names = { "Cube", "Cylinder", "Sphere" };
+        var sequence = Observable.Range(0, 3).Publish(); // from 0
+        var streamA = sequence.SelectMany(x => ResourceStreamA(names[x]));
+        var streamB = sequence.SelectMany(x => ResourceStreamB(names[x]));
 
+        Observable.Merge(streamA, streamB).Subscribe(
+            x => 
+            {
+                Debug.Log("+++ Merge +++");
+                GameObject a = x.asset as GameObject;
+                Debug.LogFormat("name: {0}", a.name);
+                GameObject o = GameObject.Instantiate(a);
+                
+            });
+
+        sequence.Connect();
+    }
+
+    /// <summary>
+    /// Result:
+    ///     
+    /// </summary>
+    void Test_CombineLatest()
+    {
+        var sequence = Observable.Range(0, 3).Publish(); // from 0
+        var streamA = sequence.SelectMany(x => ResourceStreamA(names[x]));
+        var streamB = sequence.SelectMany(x => ResourceStreamB(names[x]));
+
+        Observable.CombineLatest(streamA, streamB).Subscribe(
+            x =>
+            {
+                Debug.Log("+++ CombineLatest +++");
+                foreach (ResourceRequest r in x)
+                {
+                    GameObject o = r.asset as GameObject;
+                    Debug.LogFormat("name: {0}", o.name);
+                }
+            });
+
+        sequence.Connect();
+    }
+
+    /// <summary>
+    /// Result:
+    ///     CubeA
+    ///     CubeB
+    ///     CylinderA
+    ///     CubeB
+    ///     CylinderA
+    ///     CylinderB
+    ///     SphereA
+    ///     CylinderB
+    ///     SphereA
+    ///     SphereB
+    ///     CubeA
+    ///     CylinderA
+    ///     SphereA
+    /// </summary>
+    void Test_Concat()
+    {
         var sequence = Observable.Range(1, 3).Publish();
 
         var streamA = sequence.Select(e => names[e - 1] + "A")
             .Do(s => Debug.Log(s))
             .SelectMany(x => Resources.LoadAsync<GameObject>(x).AsAsyncOperationObservable());
             
-
         var streamB = sequence.Select(e => names[e - 1] + "B")
             .Do(s => Debug.Log(s))
             .SelectMany(x => Resources.LoadAsync<GameObject>(x).AsAsyncOperationObservable());
 
-
         List< IObservable <ResourceRequest>> list = new List<IObservable<ResourceRequest>>();
         list.Add(streamA);
         list.Add(streamB);
-        //Observable.WhenAll(streamA, streamB).Subscribe(
         Observable.Concat(list).ToArray().Subscribe(
             x =>
             {
+                Debug.Log("+++ Concat +++");
                 foreach(ResourceRequest rq in x)
                 {
                     GameObject r = rq.asset as GameObject;
+                    Debug.LogFormat("name: {0}", r.name);
                     GameObject o = GameObject.Instantiate(r);
                 }
-                //GameObject r = x[0].asset as GameObject;
-                //GameObject o = GameObject.Instantiate(r);
-                //Debug.LogFormat("concat {0}", x);
-                
-                /*
-                GameObject a = x[0].asset as GameObject;
-                GameObject o = Instantiate(a) as GameObject;
-                GameObject b = x[1].asset as GameObject;
-                GameObject q = Instantiate(b) as GameObject;
-                */
-            }, ()=> { });
+            }, ()=> { /*OnCompleted*/ });
 
         sequence.Connect();
     }
