@@ -43,8 +43,7 @@ UniRx를 이용한 스태미나 시스템의 구현
     var spEndStream = spEndSubject.AsObservable();
 ```
 
-스태미나의 회복은 `spStartStream`이 도착하면 회복을 시작한다. 회복 중에 `spEndStream`이 도착하면 이벤트 처리를 완료한다. 이렇게 이벤트 A가 올 때부터 이벤트 B가 올 때까지에 대한 처리는 아래 RX 연산들의 조합으로 쉽게 처리할 수 있다. 
-
+스태미나의 회복은 `spStartStream`이 도착하면 회복을 시작한다. 회복 중에 `spEndStream`이 도착하면 이벤트 처리를 완료한다. 이벤트 A가 올 때부터 이벤트 B가 올 때까지에 대한 처리는 아래 RX 연산 조합을 이용하면 쉽게 처리할 수 있다. 
 
 `SkipUntil + TakeUntil + Repeat`
 
