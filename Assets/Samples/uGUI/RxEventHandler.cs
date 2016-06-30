@@ -61,14 +61,14 @@ public class RxEventHandler : MonoBehaviour
                 // stop the current stream
                 spEndSubject.OnNext(slider);
 
-                Observable.FromCoroutine(UpdateSlider)
+                Observable.FromCoroutine(StartStaminaRecovery)
                     .Subscribe();
             });
 
 	}
 
 
-    IEnumerator UpdateSlider()
+    IEnumerator StartStaminaRecovery()
     {
         // delay before increasing stamina
         yield return new WaitForSeconds(this.delay);
