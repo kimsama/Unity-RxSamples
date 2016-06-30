@@ -16,7 +16,9 @@ UniRx를 이용한 스태미나 회복 시스템의 구현
 3. 스태미나가 회복중에 다시 액션을 실행하는 경우 2번을 반복한다.
 
 
-==> 이미지 삽입
+<p align="center">
+  <img src="https://github.com/kimsama/Unity-RxSamples/tree/master/Assets/Samples/uGUI/stamina-system.gif?raw=true" alt="Stamina-System"/>
+</p>
 
 
 이를 이벤트 스트림의 관점으로 보면 아래와 같이 정리할 수 있다. 
