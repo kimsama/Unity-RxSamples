@@ -35,7 +35,7 @@ public class RxEventHandler : MonoBehaviour
         var spEndStream = spEndSubject.AsObservable();
 
         // charge stamina
-        var cancel = Observable.EveryUpdate()
+        var recoveryStream = Observable.EveryUpdate()
             .SkipUntil(spStartStream) // start  when the spStartStream is arrived
             .Select( _ => slider.value )
             .TakeUntil(spEndStream)   // repeat spEndStream is arrived
