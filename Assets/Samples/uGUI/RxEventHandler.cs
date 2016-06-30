@@ -4,52 +4,77 @@ using System.Collections;
 using UnityEngine.UI;
 using UniRx;
 
+/// <summary>
+/// A simple demonstration of stamina charge system similar as Dark Soul.
+/// </summary>
 public class RxEventHandler : MonoBehaviour 
 {
+    // stamina gauge
     public Slider slider;
-    public Button button;
+
+    // decrease stamina with the given amount whenever the button is clicked.
+    public Button actionButton;
+
+    // decreasing amount of stamina whenever the action is done.
+    public float amount = 0.2f;
+
+    // how much gain stamina per frame
+    public float delta = 0.002f;
+
+    // delay time before increasing stamina gauge
+    public float delay = 1.0f;
+
+    Subject<Slider> spStartSubject = new Subject<Slider>();
+    Subject<Slider> spEndSubject = new Subject<Slider>();
 
 	void Start () 
     {
         slider.value = 1f;
 
-        // Handles button's onclick event. 
-        // Whenever the button is clicked, it decrease the value of the slider.
-        button.OnClickAsObservable()
-            .Subscribe(_ => 
-            {
-                Debug.Log("button click.");
-                slider.value -= 0.2f;
-            });
+        var spStartStream = spStartSubject.AsObservable();
+        var spEndStream = spEndSubject.AsObservable();
 
-        var sliderStream = slider.OnValueChangedAsObservable();
-
-        // 1) wait until slider's value is changed
-        // 2) when the slider's value is changed 
-        // 3) it increases the value until it reaches to 1.
-        Observable.EveryUpdate()
-            .SkipUntil(sliderStream)
+        // charge stamina
+        var cancel = Observable.EveryUpdate()
+            .SkipUntil(spStartStream) // start  when the spStartStream is arrived
             .Select( _ => slider.value )
-            .TakeWhile(x => x < 1f)
+            .TakeUntil(spEndStream)   // repeat spEndStream is arrived
             .RepeatUntilDisable(this)
             .Subscribe(v =>
                 {
-                    slider.value += 0.002f;
+                    // It increases the value until it reaches to 1.
+                    slider.value += this.delta;
+
+                    if (slider.value >= 1f)
+                        spEndSubject.OnNext(slider); 
                 });
+
+        // Whenever the button is clicked, it decrease the value of the slider.
+        actionButton.OnClickAsObservable()
+            .Subscribe(_ =>
+            {
+                Debug.Log("button click.");
+
+                // subtract stamina with the g
+                slider.value -= this.amount;
+
+                // stop the current stream
+                spEndSubject.OnNext(slider);
+
+                Observable.FromCoroutine(UpdateSlider)
+                    .Subscribe();
+            });
 
 	}
 
+
     IEnumerator UpdateSlider()
     {
-        Debug.Log("1st updateslider");
-        yield return new WaitForSeconds(1f);
-        Debug.Log("2nd updateslider");
+        // delay before increasing stamina
+        yield return new WaitForSeconds(this.delay);
 
-        while (slider.value <= 1f)
-        {
-            slider.value += 0.001f;
-            yield return 0;
-        }
+        // send the event to start the stream.
+        spStartSubject.OnNext(slider);
     }
 	
 }
