@@ -17,7 +17,7 @@ UniRx를 이용한 스태미나 회복 시스템의 구현
 
 
 <p align="center">
-  <img src="https://github.com/kimsama/Unity-RxSamples/tree/master/Assets/Samples/uGUI/stamina-system.gif?raw=true" alt="Stamina-System"/>
+  <img src="https://github.com/kimsama/Unity-RxSamples/blob/master/Assets/Samples/uGUI/stamina-system.gif?raw=true" alt="Stamina-System"/>
 </p>
 
 
