@@ -102,7 +102,7 @@ Button의 경우 Button 객체의 `OnClickAsObservable()` 을 사용해서 해�
 
 ```
 
-스태미나 소모의 시작을 `Observable.FromCoroutine`을 사용해서 코루틴 함수로 통지한 것은 스태미나 소모가 일어난 직후 바로 `recorveryStream`에서 스태미나 회복을 시작하는 것이 아니라 `delay`만큼 대기한 후 `spStartSubject`로 스태미나 회복 시작 이벤트를 통지하기 위해서이다. 
+스태미나 소모의 시작을 `Observable.FromCoroutine`을 사용해서 코루틴 함수 `StartStaminaRecovery`를 통해서 통지한 것은 스태미나 소모가 일어난 직후 바로 `recorveryStream`에서 스태미나 회복을 시작하는 것이 아니라 `delay`만큼 대기한 후 `spStartSubject`로 스태미나 회복 시작 이벤트에 대한 통지 처리를 손쉽게 하기 위해서이다. 
 
 ```csharp
     IEnumerator StartStaminaRecovery()
@@ -115,7 +115,7 @@ Button의 경우 Button 객체의 `OnClickAsObservable()` 을 사용해서 해�
     }
 ```
 
-실제로 게임에 적용할 때에는 슬라이드의 값을 바로 변경하지 말고 플레이어 캐릭터의 스태미나 값을 변경하도록 하고 슬라이드는 플레이어 캐릭터의 스태미나 값과 `Binding`해 두어서 플레이어 캐릭터의 스태미나 값을 변경할 때마다 슬라이드의 값에도 변경된 값이 같이 반영되도록 처리하도록 해야 한다. Binding과 관련하서는 UniRx의 `ReactiveProperty`를 참고하도록 하자. 
+실제 게임에 적용할 때에는 슬라이드의 값을 바로 변경하지 말고 플레이어 캐릭터의 스태미나 값을 변경하도록 하고 슬라이드는 플레이어 캐릭터의 스태미나 값과 `Binding`해 두어서 플레이어 캐릭터의 스태미나 값을 변경할 때마다 슬라이드의 값에도 변경된 값이 같이 반영되도록 처리하도록 해야 한다. Binding과 관련하서는 UniRx의 `ReactiveProperty`를 참고하도록 하자. 
 
 
 
