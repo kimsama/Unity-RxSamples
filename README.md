@@ -2,7 +2,7 @@
 
 ## 포함된 예제
 
-* [UniRx를 이용한 스태미나 회복 시스템의 구현](https://github.com/kimsama/Unity-RxSamples/blob/master/Assets/Samples/uGUI/README.md)
+* [UniRx를 이용한 스태미나 시스템의 구현](https://github.com/kimsama/Unity-RxSamples/blob/master/Assets/Samples/uGUI/README.md)
 
 ## References
 
