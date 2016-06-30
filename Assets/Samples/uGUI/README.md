@@ -25,8 +25,8 @@ UniRx를 이용한 스태미나 회복 시스템의 구현
 
 1. 액션 이벤트(예제에서는 *Action* 버튼을 클릭한 경우)가 발생한 경우 스태미나를 감소한 후
 2. `delay`만큼 대기 후에 감소 이벤트(= 스태미나 회복 시작)를 통지한다. 
-3. 감소 이벤트를 통지하면 스태미나를 채우는 스트림을 반복한다. 
-4. 스태미나를 채우는 스트림을 반복하는 도중에 다시 액션 이벤트가 통지되면 반복을 중지(*중요!*)한 후 2. 3.을 반복한다.
+3. 감소 이벤트를 통지하면 스태미나를 채우는 스트림(회복)을 반복한다. 
+4. 스태미나를 회복하는 도중에 다시 액션 이벤트가 통지되면 기존의 반복을 중지(*중요!*)한 후 2. 3.을 반복한다.
 5. 스태미나를 모두 회복하면 (*slider.value == 1*) 스태미나 감소 이벤트가 통지될 때까지 대기한다.
 
 먼저 스태미나의 감소와 회복 완료에 대한 두 가지 이벤트가 필요하다. RX에서 이와 같은 사용자 정의형 이벤트는 `Subject`를 사용해서 생성할 수 있다. 
@@ -76,7 +76,7 @@ UniRx를 이용한 스태미나 회복 시스템의 구현
 
 MonoBehaviour의 Update 시마다 이벤트 통지를 검사하기 위해서 `Observable.EveryUpdate()`로 스트림을 생성한다. 
 
-반복은 Repeat 연산으로 처리가 가능한데, 무한루프에 빠지지 않도록 주의해야 한다. UniRx에서는 이를 위해서 `RepeatSafe`와 `RepeatUntilDestroy(gameObject/component)`, `RepeatUntilDisable(gameObject/component)`와 같은 메소드를 제공한다.([UniRx ReadMe](https://github.com/neuecc/UniRx/blob/master/README.md)문서 참고) 여기에서는 컴포넌트가 disable 상태일 때에는 반복하지 않도록 RepeatUntilDisable 연산을 사용했다.
+반복은 Repeat 연산으로 처리가 가능한데, 무한루프에 빠지지 않도록 주의해야 한다. UniRx에서는 이를 위해서 `RepeatSafe`와 `RepeatUntilDestroy(gameObject/component)`, `RepeatUntilDisable(gameObject/component)`와 같은 메소드를 제공한다.([UniRx ReadMe](https://github.com/neuecc/UniRx/blob/master/README.md) 문서 참고) 여기에서는 컴포넌트가 disable 상태일 때에는 반복하지 않도록 RepeatUntilDisable 연산을 사용했다.
 
 다음으로는 uGUI의 UI 객체들의 이벤트를 UniRx를 사용해서 처리하는 방법에 대해서 살펴 보자. 
 
