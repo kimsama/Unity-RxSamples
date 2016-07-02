@@ -22,7 +22,7 @@ public class RxEventHandler : MonoBehaviour
     public float delta = 0.002f;
 
     // delay time before increasing stamina gauge
-    public float delay = 1.0f;
+    public float delay = 2.0f;
 
     Subject<Slider> spStartSubject = new Subject<Slider>();
     Subject<Slider> spEndSubject = new Subject<Slider>();
@@ -43,37 +43,46 @@ public class RxEventHandler : MonoBehaviour
             .Subscribe(v =>
                 {
                     // It increases the value until it reaches to 1.
-                    slider.value += this.delta;
+                    slider.value +=  this.delta;
 
                     if (slider.value >= 1f)
                         spEndSubject.OnNext(slider); 
+                }, 
+                ()=> 
+                {
+                    Debug.Log("completed");
                 });
 
+        IDisposable cancel = null;
+
         // Whenever the button is clicked, it decrease the value of the slider.
-        actionButton.OnClickAsObservable()
+        var buttonStream = actionButton.OnClickAsObservable()
             .Subscribe(_ =>
             {
                 Debug.Log("button click.");
 
-                // subtract stamina with the g
-                slider.value -= this.amount;
+                // force stop if any coroutine already runs.
+                if (cancel != null)
+                    cancel.Dispose(); 
 
-                // stop the current stream
-                spEndSubject.OnNext(slider);
-
-                Observable.FromCoroutine(StartStaminaRecovery)
-                    .Subscribe();
+                cancel = Observable.FromCoroutine(StartStaminaRecovery)
+                                       .Subscribe();
             });
-
-	}
+    }
 
 
     IEnumerator StartStaminaRecovery()
     {
-        // delay before increasing stamina
+        // subtract stamina with the givent amount of value.
+        slider.value -= this.amount;
+
+        // stop the current event on the recoveryStream.
+        spEndSubject.OnNext(slider);
+
+        // Hold on for the delay time before increasing stamina.
         yield return new WaitForSeconds(this.delay);
 
-        // send the event to start the stream.
+        // send the start event on the recoveryStream.
         spStartSubject.OnNext(slider);
     }
 	
