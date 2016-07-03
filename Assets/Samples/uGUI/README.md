@@ -86,19 +86,20 @@ Button의 경우 Button 객체의 `OnClickAsObservable()` 을 사용해서 해�
 ``` csharp
     public Button actionButton;
     ...
-    actionButton.OnClickAsObservable()
-        .Subscribe(_ =>
-        {
-            // 버튼 클릭시 (액션 이벤트 발생시) 스태미나를 amount 만큼 감소.
-            slider.value -= this.amount;
+        IDisposable cancel = null;
 
-            // 현재 스태미나가 회복중인 경우 spEndSubject의 메세지를 보내서 현재 회복중(repeat)인 상태를 중지하도록 한다.
-            spEndSubject.OnNext(slider);
+        var buttonStream = actionButton.OnClickAsObservable()
+            .Subscribe(_ =>
+            {
+                Debug.Log("button click.");
 
-            // 액션으로 스테미너 소모의 발생을 알림.
-            Observable.FromCoroutine(StartStaminaRecovery)
-                .Subscribe();            
-        });
+                // 회복 관련해서 이미 실행중인 코루틴이 있는 경우 실행을 종료.
+                if (cancel != null)
+                    cancel.Dispose(); 
+
+                cancel = Observable.FromCoroutine(StartStaminaRecovery)
+                                       .Subscribe();
+            });
 
 ```
 
@@ -107,12 +108,18 @@ Button의 경우 Button 객체의 `OnClickAsObservable()` 을 사용해서 해�
 ```csharp
     IEnumerator StartStaminaRecovery()
     {
+        //  스태미나를 amount 만큼 감소.
+        slider.value -= this.amount;
+
+        // 현재 스태미나가 회복중인 경우 spEndSubject의 메세지를 보내서 현재 회복중(repeat)인 상태를 중지하도록 한다.
+        spEndSubject.OnNext(slider);
+
         // delay 시간만큼 대기.
         yield return new WaitForSeconds(this.delay);
 
         // 스태미너 회복 이벤트 통지
         spStartSubject.OnNext(slider);
-    }
+    }    
 ```
 
 실제 게임에 적용할 때에는 슬라이드의 값을 바로 변경하지 말고 플레이어 캐릭터의 스태미나 값을 변경하도록 하고 슬라이드는 플레이어 캐릭터의 스태미나 값과 `Binding`해 두어서 플레이어 캐릭터의 스태미나 값을 변경할 때마다 슬라이드의 값에도 변경된 값이 자동으로  반영되도록 처리하는 것이 좋다. UniRx에서는 이러한 처리를 위해 `ReactiveProperty`를 제공하고 있으니 이를 사용하는 것도 좋은 방법이다. 
