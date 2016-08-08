@@ -82,3 +82,11 @@ This blog also contains various ShaderForge experiments.
   * It also describes *'share'* operator (but very simple) and a simple way to destinguish *'Cold & Hot'*.  
 
 * [Rx in practice](http://futurice.com/blog/reactive-c-number-in-practice) - a blog page which describes basics
+* [Reactive Extensions in .NET](https://www.manning.com/books/reactive-extensions-in-dot-net) - A book for Rx .NET
+
+### Reactive Programming Reosurces
+
+#### Haskell
+
+* [](https://wiki.haskell.org/Game_Development) - A starting page for everyone interested in doing game development with Haskell.
+* [Purely Functional, Declarative Game Logic Using Reactive Programming](https://github.com/leonidas/codeblog/blob/master/2012/2012-01-17-declarative-game-logic-afrp.md) -  which shows how coroutines can be used to implement a fixed time-step reactive programming library and use that library for modeling a simple game.
