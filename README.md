@@ -8,6 +8,7 @@
 
 Various code samples for UniRx.
 
+* [useful links](https://github.com/kimsama/Unity-RxSamples/blob/master/Assets/Doc/stuff.md) mostly found on Qiita
 * [101 Rx samples](http://rxwiki.wikidot.com/101samples#toc44)
 
 GitHub Pages
