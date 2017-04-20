@@ -88,5 +88,5 @@ This blog also contains various ShaderForge experiments.
 
 #### Haskell
 
-* [](https://wiki.haskell.org/Game_Development) - A starting page for everyone interested in doing game development with Haskell.
+* [Game_Development on wiki.haskell.org](https://wiki.haskell.org/Game_Development) - A starting page for everyone interested in doing game development with Haskell.
 * [Purely Functional, Declarative Game Logic Using Reactive Programming](https://github.com/leonidas/codeblog/blob/master/2012/2012-01-17-declarative-game-logic-afrp.md) -  which shows how coroutines can be used to implement a fixed time-step reactive programming library and use that library for modeling a simple game.
