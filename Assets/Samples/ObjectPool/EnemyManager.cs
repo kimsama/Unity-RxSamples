@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using UniRx;
+using System;
 
 /// <summary>
 /// A simple demonstration of UniRx.Toolkit.ObjectPool
@@ -15,6 +16,8 @@ public class EnemyManager : MonoBehaviour
     public Button buttonRent;
     public Button buttonReturn;
     public Button buttonShrink;
+    public Button buttonShrinkTimer;
+    public Button buttonStopShrinkTimer;
 
     EnemyObjectPool pool;
     List<Transform> enemyList;
@@ -57,6 +60,24 @@ public class EnemyManager : MonoBehaviour
             // shrink up to 60% but keep four as minimum.
             // e.g. preloaded ten object then it remains six after doing shrink.
             pool.Shrink(0.6f, 4);
+            Debug.Log("Shrink size of pool till it keeps 60%.");
+        });
+
+        IDisposable stopShrink = null;
+        // Shrink size of pool with the given timer.
+        buttonShrinkTimer.OnClickAsObservable().Subscribe(_ =>
+        {
+            // StartShrinkTimer shrink size of a pool with the given timer.
+            // e.g. it try to shrink per two seconds till to there is 40% of objects are remains but keep three as minimum.
+            stopShrink = pool.StartShrinkTimer(System.TimeSpan.FromSeconds(2), 0.4f, 3);
+            Debug.Log("Start to shrink for each of two second.");
+        });
+
+        // stop shrink timer.
+        buttonStopShrinkTimer.OnClickAsObservable().Subscribe(_ =>
+        {
+            stopShrink.Dispose();
+            Debug.Log("Stop shrink timer.");
         });
 	}
 	

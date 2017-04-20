@@ -161,7 +161,7 @@ namespace UniRx.Toolkit
         public IDisposable StartShrinkTimer(TimeSpan checkInterval, float instanceCountRatio, int minSize, bool callOnBeforeRent = false)
         {
             return Observable.Interval(checkInterval)
-                .TakeWhile(_ => disposedValue)
+                .TakeWhile(_ => disposedValue == false)
                 .Subscribe(_ =>
                 {
                     Shrink(instanceCountRatio, minSize, callOnBeforeRent);
