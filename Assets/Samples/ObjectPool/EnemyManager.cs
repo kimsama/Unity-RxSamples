@@ -14,6 +14,7 @@ public class EnemyManager : MonoBehaviour
 {
     public Button buttonRent;
     public Button buttonReturn;
+    public Button buttonShrink;
 
     EnemyObjectPool pool;
     List<Transform> enemyList;
@@ -48,6 +49,14 @@ public class EnemyManager : MonoBehaviour
                 pool.Return(tm);
                 enemyList.Remove(tm);
             }
+        });
+
+        // Shrink size of pool.
+        buttonShrink.OnClickAsObservable().Subscribe(_ => 
+        {
+            // shrink up to 60% but keep four as minimum.
+            // e.g. preloaded ten object then it remains six after doing shrink.
+            pool.Shrink(0.6f, 4);
         });
 	}
 	
