@@ -3,6 +3,7 @@
 ## 포함된 예제
 
 * [UniRx를 이용한 스태미나 시스템의 구현](https://github.com/kimsama/Unity-RxSamples/blob/master/Assets/Samples/uGUI/README.md)
+* [ObjectPool](./Assets/Samples/ObjectPool/README.md)
 
 ## References
 
