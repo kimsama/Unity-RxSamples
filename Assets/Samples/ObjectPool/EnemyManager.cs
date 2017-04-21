@@ -18,6 +18,7 @@ public class EnemyManager : MonoBehaviour
     public Button buttonShrink;
     public Button buttonShrinkTimer;
     public Button buttonStopShrinkTimer;
+    public Button buttonClear;
 
     EnemyObjectPool pool;
     List<Transform> enemyList;
@@ -78,6 +79,12 @@ public class EnemyManager : MonoBehaviour
         {
             stopShrink.Dispose();
             Debug.Log("Stop shrink timer.");
+        });
+
+        // empty the pool
+        buttonClear.OnClickAsObservable().Subscribe(_ => 
+        {
+            pool.Clear();
         });
 	}
 	

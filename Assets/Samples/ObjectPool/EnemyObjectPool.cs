@@ -21,4 +21,10 @@ public class EnemyObjectPool : ObjectPool<Transform>
         return tm;
     }
 
+    // You can override the following methods if it is neccessary.
+    // Note instance.gameObject.SetActive(true) is called inside of OnBeforeRent() 
+    // and instance.gameObject.SetActive(false) is called for OnBeforeReturn().
+    // protected override void OnBeforeRent(Transform instance)
+    // protected override void OnBeforeReturn(Transform instance)
+    // protected override void OnClear(Transform instance)
 }
