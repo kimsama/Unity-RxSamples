@@ -4,6 +4,7 @@
 
 * [Async](./Assets/Samples/Async/README.md)
 * [Drag](./Assets/Samples/Drag/README.md)
+* [StateMachineBehavior](./Assets/Samples/StateMachineBehavior/README.md)
 * [Stamina UI with UniRx](./Assets/Samples/uGUI/README.md)
 * [ObjectPool](./Assets/Samples/ObjectPool/README.md)
 * [Publish](./Assets/Samples/Publish/README.md)
