@@ -7,7 +7,6 @@
 * [Stamina UI with UniRx](./Assets/Samples/uGUI/README.md)
 * [ObjectPool](./Assets/Samples/ObjectPool/README.md)
 * [Publish](./Assets/Samples/Publish/README.md)
-* [uGUI](./Assets/Samples/uGUI/README.md)
 * [uGUI Drag](./Assets/Samples/uGUIDrag/README.md)
 * [RaycastHit](./Assets/Samples/RaycastHit/README.md)
 * [Tap&Drag](./Assets/Samples/TapAndDrag/README.md)
