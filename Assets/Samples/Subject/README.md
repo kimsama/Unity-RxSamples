@@ -1,4 +1,4 @@
-# Event notification with Subject<T>
+# Event notification with ```Subject<T>```
 
 Sample A
 

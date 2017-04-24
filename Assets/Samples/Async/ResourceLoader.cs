@@ -2,15 +2,15 @@
 using System.Collections;
 using UniRx;
 
-public class ResourceLoader : MonoBehaviour {
+public class ResourceLoader : MonoBehaviour 
+{
 
-	// Use this for initialization
 	void Start () 
     {
         // Observable for AsyncOperation
         Resources.LoadAsync<GameObject>("Prefabs/Cube")
             .AsAsyncOperationObservable()
-            .Last() // last sequence is load complete.
+            .Last() // last sequence, when the loading is completed.
             .Do(o => { 
                 if (o.asset != null)
                 {
