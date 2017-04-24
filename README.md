@@ -2,8 +2,9 @@
 
 ## Samples
 
-* [Stamina UI with UniRx](https://github.com/kimsama/Unity-RxSamples/blob/master/Assets/Samples/uGUI/README.md)
+* [Stamina UI with UniRx](./Assets/Samples/uGUI/README.md)
 * [ObjectPool](./Assets/Samples/ObjectPool/README.md)
+* [uGUI Drag](./Assets/Samples/uGUIDrag/README.md)
 
 ## References
 
