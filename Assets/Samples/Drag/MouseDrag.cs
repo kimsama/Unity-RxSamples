@@ -17,8 +17,7 @@ public class MouseDrag : MonoBehaviour
             .SelectMany(_ => this.UpdateAsObservable())
             .TakeUntil(this.OnMouseUpAsObservable())     // Until the mouse is released
             .Select(_ =>                                 // get the amount of mouse movement.
-                new Vector2(Input.GetAxis("Mouse X"),
-                            Input.GetAxis("Mouse Y")))
+                new Vector2(Input.GetAxis("Mouse X"),Input.GetAxis("Mouse Y")))
             //.Repeat()                                 // Repeat causes infinite repeat subscribe at GameObject 
                                                         // was destroyed. which leads, if in UnityEditor, Editor goes to freeze.
             .RepeatUntilDestroy(this)                   // Since the stream is completed TakeUntil re Subscribe

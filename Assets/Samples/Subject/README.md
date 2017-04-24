@@ -1,3 +1,5 @@
-An event notifying with Subject<T>
-==================================
+# Event notification with Subject<T>
 
+Sample A
+
+Sample B

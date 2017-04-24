@@ -1,6 +1,6 @@
 
 
-*on editing, may removed later*
+*on editing, may it will be removed later*
 
 ## References
 
@@ -25,7 +25,7 @@ This blog also contains various ShaderForge experiments.
 
 #### [Marimoiro](http://qiita.com/Marimoiro)'s page
 
-* [Dispose](http://qiita.com/Marimoiro/items/819ddb3e68aab7ee3b95) 
+* [Dispose](http://qiita.com/Marimoiro/items/819ddb3e68aab7ee3b95)
 * [CombineLatest](http://qiita.com/Marimoiro/items/9252cf7eaefee22a9f76)
 * [UniRxSimpleSample](https://github.com/Marimoiro/UniRxSimpleSample) on github site.
 
@@ -40,7 +40,7 @@ This blog also contains various ShaderForge experiments.
 
 #### [RyotaMurohoshi](http://qiita.com/RyotaMurohoshi)'s page
 
-* [SelectMany with LINQToObjects](http://qiita.com/RyotaMurohoshi/items/81d73fb2cdd751da0a84) - paractical sample, must read! 
+* [SelectMany with LINQToObjects](http://qiita.com/RyotaMurohoshi/items/81d73fb2cdd751da0a84) - paractical sample, must read!
 
 #### [satotin](http://qiita.com/satotin)'s page
 
@@ -49,7 +49,7 @@ This blog also contains various ShaderForge experiments.
 #### [UnagiHuman](http://qiita.com/UnagiHuman)
 
 * [BehaviorTree with UniRx](http://qiita.com/UnagiHuman/items/7281b00c9ae00e558929)
-  * [BehaviourtreeSample](https://github.com/unagiHuman/BehaviourtreeSample) - Sample Code of Simple Behavior Tree using UniRx on github 
+  * [BehaviourtreeSample](https://github.com/unagiHuman/BehaviourtreeSample) - Sample Code of Simple Behavior Tree using UniRx on github
 
 ### HatenaBlog
 
@@ -70,7 +70,7 @@ This blog also contains various ShaderForge experiments.
 * [Observable 직접 작성하기](http://cruwelcodes.blogspot.kr/2015/01/rx-reactive-extension-1-observable.html) - [Ruel's Programming study](http://cruwelcodes.blogspot.kr/) blog page
 * [UniVM with UniRx](http://ykimisaki.hatenablog.jp/entry/2015/03/25/012436) - A binding model with using UniRx.
   * [UniVM](https://github.com/yKimisaki/UniVM) - A project page on github.
-* [UniRx Study](http://eventdots.jp/eventreport/507306) 
+* [UniRx Study](http://eventdots.jp/eventreport/507306)
 
 ### [atmarkit](http://www.atmarkit.co.jp/) - *IT 전문가를 위한 문제 해결 미디어*
 
